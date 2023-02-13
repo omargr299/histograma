@@ -190,7 +190,7 @@ int checkH(string nombre,int numeros[], int *cantidad, int *mayor){
 int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
     ifstream archivo(nombre);
     string linea,copia;
-    char anterior;
+    char anterior = 0;
     getline(archivo,linea);
 
     int numlinea=0;
@@ -203,12 +203,11 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
     while (!archivo.eof()) { 
         getline(archivo,linea);
         if(numlinea>0 && *cantidad!=linea.length()) return 1;
-
-        
         
         *cantidad = linea.length();
         for(char c : linea){
-            if(pos < *cantidad) copia = linea.substr(pos,pos+1);
+            if(pos>0 && pos < *cantidad) copia = linea.substr(pos,pos+1);
+            else copia = linea;
             
             if(c!=' ' && c!='*' && (int)anterior<48 || (int)anterior>57){
                 try{
@@ -240,7 +239,6 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
 
     if(*cantidad != cuenta+(cuenta-1)+espacios) return 1;
     *cantidad = cuenta;
-
     archivo.close();
     archivo.open(nombre);
     getline(archivo,linea);
@@ -249,27 +247,31 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
     cuenta = 0;
     numlinea--;
     anterior=' ';
+    
+    
     while (!archivo.eof()) { 
 
         getline(archivo,linea);
         if(numlinea<=0) continue;
-        
-        for(char c : linea){
 
-            if(col%2){
+        espacios=Espacios(numeros[0]);
+        for (int i = espacios; i > 0; i--)
+            col--;
+
+        for(char c : linea){
+            if(col%2 || col < 0 && espacios>0 ){
                 if(c!=' ') return 1;
+                espacios--;
             }
             else{
                 if(numlinea>numeros[cuenta] && c!=' ') return 1;
                 if(numlinea<=numeros[cuenta] && c!='*') return 1;
                 cuenta++;
-                espacios = Espacios(numeros[cuenta]);
+                espacios = Espacios(numeros[cuenta])+1;
             }
             
-            if(espacios==0 || !(col%2)) 
+            if(espacios==0 || !(col%2) || col<0) 
                 col++;
-            else
-                espacios--;
                 
             anterior = c;
         }
@@ -277,7 +279,8 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
         cuenta = 0;
         numlinea--;
     }
-
+    cout << "aqui bob esponja";
+    system("pause");
     return 0;
 }
 
@@ -404,7 +407,8 @@ int main(int argc, char const *argv[])
                 cout << endl <<"xxx Opcion no disponible. Por favor eliga una opcion de las que estan en el menu" << endl << endl;
                 system("pause");
                 break;
-}
+        }
     }
+    system("cls");
 
 }
