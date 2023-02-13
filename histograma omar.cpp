@@ -31,9 +31,9 @@ string h(int nums[], int cantidad, int mayor){
 
     grafica += "Horizontal\n";
     for(int i=0; i<cantidad; i++){ // filas
-        
+
         grafica += to_string(nums[i]) + " "; // escribimos el dato al inicio de cada fila
-        
+
         for(int j=0;j<mayor;j++){ // columnas
 
             // escribimos el numero de asteriscos que nos indica el dato
@@ -77,8 +77,8 @@ string v(int nums[], int cantidad, int mayor){
                 {
                     grafica+=" ";
                 }
-                
-                
+
+
                 if (i <= nums[j])
                     grafica += "*";
                 else
@@ -149,6 +149,7 @@ string Graficar(int nums[], int cantidad, int mayor){
                 break;
             }
     }
+    return " ";
 }
 
 int checkH(string nombre,int numeros[], int *cantidad, int *mayor){
@@ -159,19 +160,19 @@ int checkH(string nombre,int numeros[], int *cantidad, int *mayor){
     int numlinea=0;
     int cuenta = 0;
 
-    while (!archivo.eof()) { 
-        archivo >> linea;  
+    while (!archivo.eof()) {
+        archivo >> linea;
         try{
            if(!(numlinea%2) )
-            {   
-                numeros[cuenta] = stoi(linea,nullptr,10); 
-                if (numeros[cuenta] > *mayor) 
+            {
+                numeros[cuenta] = stoi(linea,nullptr,10);
+                if (numeros[cuenta] > *mayor)
                     *mayor = numeros[cuenta];
 
-                cuenta++; 
+                cuenta++;
                 *cantidad = cuenta;}
             else{
-                if (linea.length()!=numeros[cuenta-1]) throw 1;
+                if ((int)linea.length()!=numeros[cuenta-1]) throw 1;
             }
         }
         catch(const exception& e){
@@ -200,24 +201,24 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
     int pos = 0;
     int espacios= 0;
 
-    while (!archivo.eof()) { 
+    while (!archivo.eof()) {
         getline(archivo,linea);
-        if(numlinea>0 && *cantidad!=linea.length()) return 1;
-        
+        if(numlinea>0 && *cantidad!=(int)linea.length()) return 1;
+
         *cantidad = linea.length();
         for(char c : linea){
             if(pos>0 && pos < *cantidad) copia = linea.substr(pos,pos+1);
             else copia = linea;
-            
-            if(c!=' ' && c!='*' && (int)anterior<48 || (int)anterior>57){
+
+            if(c!=' ' && c!='*' && ((int)anterior<48 || (int)anterior>57)){
                 try{
-                    numeros[cuenta] = stoi(copia,nullptr,10); 
+                    numeros[cuenta] = stoi(copia,nullptr,10);
                     pos+=2;
                     pos+=Espacios(numeros[cuenta]);
                     if(pos < *cantidad) copia = linea.substr(pos,pos+1);
-    
 
-                    if (numeros[cuenta] > *mayor) 
+
+                    if (numeros[cuenta] > *mayor)
                         *mayor = numeros[cuenta];
 
                     cuenta++;
@@ -243,13 +244,13 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
     archivo.open(nombre);
     getline(archivo,linea);
 
-    int col = 0, num=0;
+    int col = 0;
     cuenta = 0;
     numlinea--;
     anterior=' ';
-    
-    
-    while (!archivo.eof()) { 
+
+
+    while (!archivo.eof()) {
 
         getline(archivo,linea);
         if(numlinea<=0) continue;
@@ -259,7 +260,7 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
             col--;
 
         for(char c : linea){
-            if(col%2 || col < 0 && espacios>0 ){
+            if((col%2 || col < 0) && espacios>0 ){
                 if(c!=' ') return 1;
                 espacios--;
             }
@@ -269,40 +270,38 @@ int checkV(string nombre,int numeros[], int *cantidad, int *mayor){
                 cuenta++;
                 espacios = Espacios(numeros[cuenta])+1;
             }
-            
-            if(espacios==0 || !(col%2) || col<0) 
+
+            if(espacios==0 || !(col%2) || col<0)
                 col++;
-                
+
             anterior = c;
         }
         col = 0;
         cuenta = 0;
         numlinea--;
     }
-    cout << "aqui bob esponja";
-    system("pause");
+
     return 0;
 }
 
 int LeerArchivo(int numeros[], int *cantidad, int *mayor){
     string nombre, linea,graf;
-    int cuenta = 0;
     *mayor = 0 ; *cantidad=0;
 
-    cout << "Ingresa el nombre del archivo: "; 
-    cin >> nombre; 
+    cout << "Ingresa el nombre del archivo: ";
+    cin >> nombre;
 
     nombre = "./" + nombre + ".txt";
     ifstream archivo(nombre);
-    
-    int num=0,numlinea=0,modo=0;
+
+    int modo=0;
     string tipo;
     archivo >> tipo;
 
     if(tipo=="Horizontal") modo=1;
     else if(tipo=="Vertical") modo=0;
     else return 1;
-    
+
     system("cls");
     string grafica;
     if (modo) {
@@ -314,7 +313,7 @@ int LeerArchivo(int numeros[], int *cantidad, int *mayor){
         grafica = v(numeros,*cantidad,*mayor);
         }
     cout << grafica << endl;
-    archivo.close(); 
+    archivo.close();
     return 0;
 }
 
